@@ -55,7 +55,7 @@ public class SecretKeyProvider {
         }
 
         if (shared){
-            secretKey = Keys.hmacShaKeyFor(signingKey.getBytes(StandardCharsets.UTF_8));
+            secretKey = Keys.hmacShaKeyFor(signingKey.getBytes());
         } else {
             secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         }

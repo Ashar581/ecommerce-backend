@@ -1,2 +1,14 @@
 server:
   port: 7002
+
+app:
+  security:
+    jwt:
+      issuer: ecommerce
+      atexpirationtimeinmin: 15
+      rtexpirationtimeinmin: 360
+    key:
+      keyType: shared
+      useEnvVar: false
+      keyEnvVar: environment
+      secretKey: fe80::e9ce:670:ac50:89bc:fe80::4418:5b6c:1df3:4a06
