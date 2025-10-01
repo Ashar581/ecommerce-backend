@@ -14,6 +14,7 @@ import org.hibernate.type.SqlTypes;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -43,6 +44,7 @@ public class Vendor {
     private double ratings;
     private String supportEmail;
     private String supportContact;
+    private Set<Long> productIds;
 
     @OneToOne
     @MapsId
