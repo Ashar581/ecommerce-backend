@@ -18,7 +18,9 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
+    @Column(unique = true)
     private String code;
     private String description;
     private Instant createdAt;
@@ -35,6 +37,7 @@ public class Role {
         this.createdBy = AppUtils.getLoggedInUser().getUserId();
         this.updatedAt = Instant.now();
         this.updatedBy = AppUtils.getLoggedInUser().getUserId();
+        this.code = AppUtils.lemmatizeAndUpperCaseWithReplacement(this.name,"_");
     }
 
     @PreUpdate

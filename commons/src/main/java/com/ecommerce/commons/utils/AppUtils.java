@@ -35,4 +35,9 @@ public class AppUtils {
         return data.replaceAll("^[A-Za-z0-9]]","").toUpperCase();
     }
 
+    public static String lemmatizeAndUpperCaseWithReplacement(String data, String replacement){
+        if (data==null) return null;
+
+        return data.replaceAll("^[A-Za-z0-9]",replacement).toUpperCase();
+    }
 }
