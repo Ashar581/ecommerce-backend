@@ -1,5 +1,6 @@
 package com.ecommerce.users.entity;
 
+import com.ecommerce.commons.utils.AppUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,4 +28,18 @@ public class Role {
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<User> users;
+
+    @PrePersist
+    private void prePersist(){
+        this.createdAt = Instant.now();
+        this.createdBy = AppUtils.getLoggedInUser().getUserId();
+        this.updatedAt = Instant.now();
+        this.updatedBy = AppUtils.getLoggedInUser().getUserId();
+    }
+
+    @PreUpdate
+    private void preUpdate(){
+        this.updatedBy = AppUtils.getLoggedInUser().getUserId();
+        this.updatedAt = Instant.now();
+    }
 }

@@ -1,5 +1,6 @@
 package com.ecommerce.users.entity;
 
+import com.ecommerce.users.model.NotificationType;
 import com.ecommerce.users.model.Priority;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,8 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private Priority priority;
     private Instant createdAt;
+    @Enumerated(EnumType.STRING)
+    private NotificationType notificationType;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

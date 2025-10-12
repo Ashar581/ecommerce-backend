@@ -3,6 +3,8 @@ package com.ecommerce.commons.exception.handler;
 import com.ecommerce.commons.configs.TimeFormat;
 import com.ecommerce.commons.exception.*;
 import com.ecommerce.commons.model.base.BaseExceptionResponse;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler implements TimeFormat {
@@ -92,5 +95,18 @@ public class GlobalExceptionHandler implements TimeFormat {
                 .timestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern(GENERAL_FORMAT)))
                 .message(ufe.getMessage())
                 .build(),HttpStatus.SERVICE_UNAVAILABLE);
+    }
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<BaseExceptionResponse> constraintViolationExceptionHandler(ConstraintViolationException cvx){
+        String message = cvx.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining(" | "));
+        return new ResponseEntity<>(BaseExceptionResponse.builder()
+                .status(false)
+                .code(HttpStatus.BAD_REQUEST.value())
+                .timestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern(GENERAL_FORMAT)))
+                .message(message)
+                .build(), HttpStatus.BAD_GATEWAY);
     }
 }

@@ -1,5 +1,6 @@
 package com.ecommerce.users.entity;
 
+import com.ecommerce.commons.utils.AppUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +10,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
 
 /**
  * We have kept 4 profiles, Admin, Customer, Delivery Agent and Vendor. This class will be the base class of
@@ -47,9 +47,25 @@ public class User {
     inverseJoinColumns = @JoinColumn(name="role_id"))
     private Set<Role> roles;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Address> address;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Notification> notifications;
+
+    //can have personalized settings.
+
+    @PrePersist
+    private void prePersist(){
+        this.createdAt = Instant.now();
+        this.createdBy = AppUtils.getLoggedInUser().getUserId();
+        this.updatedAt = Instant.now();
+        this.updatedBy = AppUtils.getLoggedInUser().getUserId();
+    }
+
+    @PreUpdate
+    private void preUpdate(){
+        this.updatedBy = AppUtils.getLoggedInUser().getUserId();
+        this.updatedAt = Instant.now();
+    }
 }

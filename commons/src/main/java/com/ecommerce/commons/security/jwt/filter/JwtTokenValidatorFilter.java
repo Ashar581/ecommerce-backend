@@ -27,23 +27,28 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter implements Sec
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String header = request.getHeader(AUTHORIZATION_HEADER);
+        try {
+            String header = request.getHeader(AUTHORIZATION_HEADER);
 
-        if (header==null || !header.startsWith(AUTHENTICATION_PREFIX)){
-            filterChain.doFilter(request,response);
-            return;
+            if (header == null || !header.startsWith(AUTHENTICATION_PREFIX)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            String token = header.replace(AUTHENTICATION_PREFIX, "").trim();
+            JwtUser user = jwtTokenWrapperService.validateToken(token);
+            if (user != null) {
+                List<SimpleGrantedAuthority> authorities = user.getAuthorities().stream().map(SimpleGrantedAuthority::new).toList();
+
+                Authentication authentication = new CustomUsernamePasswordAuth(user.getPrincipal(), null, authorities, user.getFullName(), user.getUserId());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                ThreadLocalAuthStore.updateThreadStore(token);
+            }
+            filterChain.doFilter(request, response);
+        } finally {
+          ThreadLocalAuthStore.clearTokenStore();
+          SecurityContextHolder.clearContext();
         }
-
-        String token = header.replace(AUTHENTICATION_PREFIX,"").trim();
-        JwtUser user = jwtTokenWrapperService.validateToken(token);
-        if (user!=null) {
-            List<SimpleGrantedAuthority> authorities = user.getAuthorities().stream().map(SimpleGrantedAuthority::new).toList();
-
-            Authentication authentication = new CustomUsernamePasswordAuth(user.getPrincipal(),null,authorities,user.getFullName(), user.getUserId());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            ThreadLocalAuthStore.updateThreadStore(token);
-        }
-        filterChain.doFilter(request,response);
     }
 }

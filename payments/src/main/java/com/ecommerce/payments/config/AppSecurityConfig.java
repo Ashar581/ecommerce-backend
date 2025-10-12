@@ -35,13 +35,13 @@ public class AppSecurityConfig {
                             corsConfiguration.setAllowedOrigins(Collections.singletonList("*"));
 
                             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                            source.registerCorsConfiguration("payments/**",corsConfiguration);
+                            source.registerCorsConfiguration("api/payments/**",corsConfiguration);
 
                             return source.getCorsConfiguration(request);
                         }))
                 .addFilterBefore(jwtTokenValidatorFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize->authorize
-                        .requestMatchers("public/**").permitAll()
+                        .requestMatchers("**/public/**").permitAll()
                         .anyRequest().authenticated());
 
         return httpSecurity.build();

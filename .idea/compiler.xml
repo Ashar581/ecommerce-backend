@@ -3,16 +3,25 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="commons" />
+      </profile>
       <profile name="Annotation profile for users" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <option name="mapstruct.defaultComponentModel" value="spring" />
         <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.5.5.Final/mapstruct-processor-1.5.5.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.5.5.Final/mapstruct-1.5.5.Final.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.40/lombok-1.18.40.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
         </processorPath>
         <module name="orders" />
         <module name="users" />
-        <module name="commons" />
         <module name="products" />
         <module name="payments" />
       </profile>
@@ -21,10 +30,10 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="commons" options="-parameters" />
-      <module name="orders" options="-parameters" />
-      <module name="payments" options="-parameters" />
-      <module name="products" options="-parameters" />
-      <module name="users" options="-parameters" />
+      <module name="orders" options="-parameters -Amapstruct.defaultComponentModel=spring" />
+      <module name="payments" options="-parameters -Amapstruct.defaultComponentModel=spring" />
+      <module name="products" options="-parameters -Amapstruct.defaultComponentModel=spring" />
+      <module name="users" options="-parameters -Amapstruct.defaultComponentModel=spring" />
     </option>
   </component>
 </project>

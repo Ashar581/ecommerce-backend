@@ -23,5 +23,16 @@ public class AppUtils {
             return new JwtUser();
         }
     }
+    public static String lemmatize(String data){
+        if (data==null) return null;
+
+        return data.replaceAll("^[A-Za-z0-9]","");
+    }
+
+    public static String lemmatizeAndUpperCase(String data){
+        if (data==null) return null;
+
+        return data.replaceAll("^[A-Za-z0-9]]","").toUpperCase();
+    }
 
 }

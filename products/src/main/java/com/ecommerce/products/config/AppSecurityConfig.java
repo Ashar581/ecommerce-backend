@@ -34,13 +34,13 @@ public class AppSecurityConfig {
                             config.setAllowedHeaders(Collections.singletonList("*"));
 
                             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                            source.registerCorsConfiguration("products/**",config);
+                            source.registerCorsConfiguration("api/products/**",config);
 
                             return source.getCorsConfiguration(request);
                         }))
                 .addFilterBefore(jwtTokenValidatorFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize->authorize
-                        .requestMatchers("/public/**").permitAll()
+                        .requestMatchers("**/public/**").permitAll()
                         .anyRequest().authenticated());
 
         return http.build();

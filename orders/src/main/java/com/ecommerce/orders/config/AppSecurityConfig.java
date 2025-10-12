@@ -34,7 +34,7 @@ public class AppSecurityConfig {
                             corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
 
                             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                            source.registerCorsConfiguration("/orders/**",corsConfiguration);
+                            source.registerCorsConfiguration("api/orders/**",corsConfiguration);
 
                             return source.getCorsConfiguration(request);
                         }))

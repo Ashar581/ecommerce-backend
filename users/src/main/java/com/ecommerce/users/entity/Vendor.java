@@ -1,5 +1,6 @@
 package com.ecommerce.users.entity;
 
+import com.ecommerce.commons.utils.AppUtils;
 import com.ecommerce.users.model.AadhaarCard;
 import com.ecommerce.users.model.BankDetails;
 import com.ecommerce.users.model.Pan;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -45,9 +47,27 @@ public class Vendor {
     private String supportEmail;
     private String supportContact;
     private Set<Long> productIds;
+    private Instant createdAt;
+    private String createdBy;
+    private Instant updatedAt;
+    private String updatedBy;
 
     @OneToOne
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;
+
+    @PrePersist
+    private void prePersist(){
+        this.createdAt = Instant.now();
+        this.createdBy = AppUtils.getLoggedInUser().getUserId();
+        this.updatedAt = Instant.now();
+        this.updatedBy = AppUtils.getLoggedInUser().getUserId();
+    }
+
+    @PreUpdate
+    private void preUpdate(){
+        this.updatedBy = AppUtils.getLoggedInUser().getUserId();
+        this.updatedAt = Instant.now();
+    }
 }

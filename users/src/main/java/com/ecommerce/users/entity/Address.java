@@ -1,11 +1,13 @@
 package com.ecommerce.users.entity;
 
+import com.ecommerce.commons.utils.AppUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
+import java.time.Instant;
 
 @Data
 @Entity
@@ -23,8 +25,26 @@ public class Address {
     private String city;
     private String state;
     private String country;
+    private Instant createdAt;
+    private String createdBy;
+    private Instant updatedAt;
+    private String updatedBy;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @PrePersist
+    private void prePersist(){
+        this.createdAt = Instant.now();
+        this.createdBy = AppUtils.getLoggedInUser().getUserId();
+        this.updatedAt = Instant.now();
+        this.updatedBy = AppUtils.getLoggedInUser().getUserId();
+    }
+
+    @PreUpdate
+    private void preUpdate(){
+        this.updatedBy = AppUtils.getLoggedInUser().getUserId();
+        this.updatedAt = Instant.now();
+    }
 }
